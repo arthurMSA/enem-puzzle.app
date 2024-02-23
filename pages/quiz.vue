@@ -112,7 +112,6 @@ export default {
                 'quimica',
                 'matemática',
             ],
-            points: 0,
         }
     },
     async created() {
@@ -124,7 +123,7 @@ export default {
     },
     methods: {
         ...mapActions(useQuestionStore, ['listQuestions']),
-        ...mapActions(useAnswerStore, ['sendAnswer']),
+        ...mapActions(useAnswerStore, ['sendAnswer', 'setPoints']),
         questionAlrearyAswered(questionId) {
             return Object.keys(this.answers).includes(questionId)
         },
@@ -155,9 +154,9 @@ export default {
 
         },
         addPoints({ gain, loss }) {
-            this.points += gain
+            this.setPoints(this.points + gain)
             if (this.points - loss < 0) return
-            this.points -= loss
+            this.setPoints(this.points - loss)
         },
         async goToNextQuestion() {
             if (this.isLastAnswer) {
@@ -183,7 +182,7 @@ export default {
                 4: 'e',
             }[answerNumber]
         },
-        getOptionsBackgroundColor(questionId, optionIndex) { //REFATORAR
+        getOptionsBackgroundColor(questionId, optionIndex) {
             const validationClassesColor = {}
             if (this.questionAlrearyAswered(questionId)) {
                 const answerIsCorrect = this.parseAnswer(this.answers[questionId].selectedAnswerIndex) == this.answers[questionId].correctAnswer
@@ -202,6 +201,7 @@ export default {
         }
     },
     computed: {
+        ...mapState(useAnswerStore, ['points']),
         getNextBtnLabel() {
             if (this.isFinished) return 'FINALIZAR'
             if (this.questionAlrearyAswered(this.currentQuestion.id)) return 'PRÓXIMA'

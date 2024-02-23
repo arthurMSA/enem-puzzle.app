@@ -9,6 +9,7 @@ export default defineNuxtConfig({
   modules: [
     'vuetify-nuxt-module',
     '@pinia/nuxt',
+    '@pinia-plugin-persistedstate/nuxt',
   ],
   imports: {
     dirs: ['stores', 'composables'],
