@@ -1,8 +1,16 @@
 <template>
     <div class="elevated-page-container">
         <div class="left-container d-flex flex-column align-center justify-center px-16">
+            <v-skeleton-loader
+                v-if="loading"
+                class="mb-16"
+                type="paragraph"
+                heigth="200"
+                :style="{ 'width': '90%' }"
+            />
             <v-window
                 v-model="currentQuestion.index"
+                v-else
             >
                 <v-window-item
                     v-for="(question, index) in questions"
@@ -36,6 +44,7 @@
             </v-window>
             <v-btn
                 v-if="!isFinished"
+                :loading="loadingSendButton"
                 class="ml-auto"
                 color="primary"
                 @click="getNextBtnAction"
@@ -94,6 +103,8 @@ import { mapState, mapActions } from 'pinia'
 export default {
     data() {
         return {
+            loading: false,
+            loadingSendButton: false,
             questions: [],
             answers: {},
             selectedAnswer: null,
@@ -115,11 +126,13 @@ export default {
         }
     },
     async created() {
+        this.loading = true
         this.currentArea = this.areas[0]
         this.questions = await this.listQuestions(this.currentArea)
         this.currentQuestion.index = 0
         this.currentQuestion.id = this.questions[0]._id['$oid']
         this.currentQuestion.question = this.questions[0]
+        this.loading = false
     },
     methods: {
         ...mapActions(useQuestionStore, ['listQuestions']),
@@ -131,10 +144,12 @@ export default {
             if (this.selectedAnswer !== null) {
                 try {
                     const questionId = this.currentQuestion.id
+                    this.loadingSendButton = true
                     const responseAnswer = await this.sendAnswer({
                         questionId,
                         answer: this.parseAnswer(this.selectedAnswer)
                     })
+                    this.loadingSendButton = false
                     this.addPoints(responseAnswer.points)
                     this.answers[questionId] = {
                         selectedAnswerIndex: this.selectedAnswer,

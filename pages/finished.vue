@@ -42,21 +42,21 @@ export default {
                 {
                     label: 'Novato',
                     min: 0,
-                    max: 5,
+                    max: 45,
                 },
                 {
                     label: 'Conhecedor',
-                    min: 6,
-                    max: 10,
+                    min: 46,
+                    max: 90,
                 },
                 {
                     label: 'Expert',
-                    min: 11,
-                    max: 20,
+                    min: 91,
+                    max: 170,
                 },
                 {
-                    label: 'Metre Do ENEM',
-                    min: 21,
+                    label: 'Mestre Do ENEM',
+                    min: 171,
                     max: null,
                 },
             ]
