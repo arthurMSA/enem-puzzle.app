@@ -1,6 +1,14 @@
 <template>
     <div class="elevated-page-container">
-        <div class="left-container d-flex flex-column align-center justify-center px-16">
+        <div
+            class="d-flex flex-column align-center justify-center px-16"
+            :class="{ 'left-container': !isMobile }"
+        >
+            <pointsView
+                v-if="isMobile"
+                class="mb-4"
+                :points="points"
+            />
             <v-skeleton-loader
                 v-if="loading"
                 class="mb-16"
@@ -21,11 +29,17 @@
                     <v-card
                         elevation="0"
                         color="transparent"
+                        class="overflow-auto"
                     >
                         <v-card-text class="pa-0">
                             <div class="text-h5 text-primary mb-10 font-weight-bold">
                                 QUESTÃO {{ index+1 }}
                             </div>
+                            <v-img
+                                :src="question.imagem"
+                                max-height="200"
+                                max-width="300"
+                            />
                             <div class="mb-4">
                                 {{question['texto']}}
                             </div>
@@ -47,6 +61,7 @@
                 :loading="loadingSendButton"
                 class="ml-auto"
                 color="primary"
+                :block="isMobile"
                 @click="getNextBtnAction"
             >
                 {{ getNextBtnLabel }}
@@ -61,18 +76,14 @@
                 FINALIZAR QUIZ
             </v-btn>
         </div>
-        <div class="right-container d-flex flex-column align-center">
-            <div class="mt-8">
-                <v-icon
-                    color="primary"
-                    size="30"
-                >
-                    mdi-trophy
-                </v-icon>
-                <span class="ml-4 text-h6">
-                    {{ points }} PONTOS
-                </span>
-            </div>
+        <div
+            v-if="!isMobile"
+            class="right-container d-flex flex-column align-center"
+        >
+            <pointsView
+                class="mt-8"
+                :points="points"
+            />
             <div
                 v-if="currentQuestion.question !== null"
                 class="d-flex flex-column text-primary text-center align-self-center my-auto"
@@ -217,6 +228,9 @@ export default {
     },
     computed: {
         ...mapState(useAnswerStore, ['points']),
+        isMobile() {
+            return this.$vuetify.display.mobile
+        },
         getNextBtnLabel() {
             if (this.isFinished) return 'FINALIZAR'
             if (this.questionAlrearyAswered(this.currentQuestion.id)) return 'PRÓXIMA'

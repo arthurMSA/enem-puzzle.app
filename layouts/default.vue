@@ -2,13 +2,31 @@
     <div>
       <div class="d-flex">
         <div class="bg-left-container"></div>
-        <div class="bg-right-container"></div>
+        <div :class="{'bg-right-container': !isMobile}"></div>
       </div>
-        <div class="elevated-page">
+        <div
+            v-if="!isMobile"
+            class="elevated-page"
+        >
+            <NuxtPage></NuxtPage>
+        </div>
+        <div
+            v-else
+            class="py-6"
+        >
             <NuxtPage></NuxtPage>
         </div>
     </div>
 </template>
+<script>
+export default {
+    computed: {
+        isMobile() {
+            return this.$vuetify.display.mobile
+        },
+    },
+}
+</script>
 <style>
 .bg-left-container {
     width: 65vw;

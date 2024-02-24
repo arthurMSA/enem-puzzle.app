@@ -1,27 +1,27 @@
 <template>
     <div class="elevated-page-container">
-        <div class="left-container d-flex flex-column align-center justify-center">
-            <img src="../public/undraw_online_test.svg"/>
-        </div>
-        <div class="right-container d-flex flex-column align-center justify-center">
-            <p class="text-h3 text-primary font-weight-bold mb-10">
-                ENEM QUIZ
-            </p>
-            <div class="text-h6 w-75 gray-font text-center mb-8">
-                BEM-VINDO AO ENEM QUIZ. <br>
-                A plataforma definitiva de preparação para um dos exames mais importantes do Brasil.
-            </div>
-            <v-btn
-                color="primary"
-                size="large"
-                width="80%"
-                to="/quiz"
+        <div
+            v-if="!isMobile"
+        >
+            <div
+                class="d-flex flex-column align-center justify-center"
+                :class="{ 'left-container': !isMobile }"
             >
-                COMEÇAR AGORA
-            </v-btn>
+                <img src="../public/undraw_online_test.svg"/>
+            </div>
         </div>
+        <HomeRigthContainer/>
     </div>
 </template>
+<script>
+export default {
+    computed: {
+        isMobile() {
+            return this.$vuetify.display.mobile
+        },
+    },
+}
+</script>
 <style scoped>
 .gray-font {
     color: #3c3c51;
